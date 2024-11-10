@@ -1,12 +1,16 @@
 import pygame
 from items import Human, Rock
+from funcs import pos_to_pix
 
 class Game():
     def __init__(self):
         self.screen_width = 500
         self.screen_height = 400
 
-        pygame.init()
+        self.bbox = [-self.screen_width//2, self.screen_width//2,
+                     self.screen_height//2, -self.screen_height//2]
+        
+        getattr(pygame, "init")()
         screen = pygame.display.set_mode(
                 (self.screen_width,self.screen_height))
 
@@ -19,10 +23,6 @@ class Game():
 
         pygame.font.init()
         my_font = pygame.font.SysFont('Arial', 15)
-    
-        def pos_to_pix(pos):
-        #transform possition to pixels
-            return (pos[0]+(self.screen_width//2),pos[1]+self.screen_height//2)
 
         running = True
     
@@ -37,20 +37,41 @@ class Game():
         
             if keys[pygame.K_DOWN]:
                 h1.set_facing("front")
-                h1.move((0,0.2))
+                h1.move((0,-0.2))
+                if h1.pos[1]<self.bbox[3]:
+                    self.load_tile("down")
             if keys[pygame.K_UP]:
                 h1.set_facing("back")
-                h1.move((0,-0.2))
+                h1.move((0,0.2))
+                if h1.pos[1]>self.bbox[2]:
+                    self.load_tile("up")
             if keys[pygame.K_LEFT]:
                 h1.set_facing("left")
                 h1.move((-0.2,0))
+                if h1.pos[0]<self.bbox[0]:
+                    self.load_tile("left")
             if keys[pygame.K_RIGHT]:
                 h1.set_facing("right")
                 h1.move((0.2,0))
-
-            #image_rect = s_views[facing].get_rect()
-            #image_rect.center = pos_to_pix(items[0]["pos"])
-            screen.blits([(item.img,pos_to_pix(item.pos)) for item in items])
-
+                if h1.pos[0]>self.bbox[1]:
+                    self.load_tile("right")
+            
+            screen.blits([(item.img,pos_to_pix(
+                self.bbox,item.pos,item.size)) for item in items])
+            
             pygame.display.flip()
 
+    def load_tile(self, side):
+        match side:
+            case "down":
+                self.bbox[2]=self.bbox[3]
+                self.bbox[3]=self.bbox[3]-self.screen_height
+            case "up":
+                self.bbox[3]=self.bbox[2]
+                self.bbox[2]=self.bbox[2]+self.screen_height
+            case "left":
+                self.bbox[1]=self.bbox[0]
+                self.bbox[0]=self.bbox[0]-self.screen_width
+            case "right":
+                self.bbox[0]=self.bbox[1]
+                self.bbox[1]=self.bbox[1]+self.screen_width

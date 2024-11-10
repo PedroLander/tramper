@@ -1,16 +1,18 @@
 import pygame
 
 class Item():
-    def __init__(self, pos, scale):
+    def __init__(self, pos, size):
         self.pos = pos
-        self.scale = scale
+        #size is a tuple of (width, height) pixels
+        self.size = size
 
     def load_img(self, file):
         img = pygame.image.load(file).convert_alpha()
-        img_width, img_height = img.get_size()
-        new_size = (int(img_width*self.scale),
-                    int(img_height*self.scale))
-        img = pygame.transform.scale(img, new_size)
+
+        #img_width, img_height = img.get_size()
+        #new_size = (int(img_width*self.scale),
+        #            int(img_height*self.scale))
+        img = pygame.transform.scale(img, self.size)
         return img
 
 class StaticItem(Item):
@@ -40,7 +42,7 @@ class MovingItem(Item):
             self.img = self.r_img
 
     def move(self, delta):
-        self.pos = [a+b for a, b in zip(self.pos, delta)]    
+        self.pos = [a-b for a, b in zip(self.pos, delta)]
 
 class Human(MovingItem):
     def __init__(self, pos):
@@ -48,11 +50,11 @@ class Human(MovingItem):
         back = "images/icons/sheriff_back.png"
         left = "images/icons/sheriff_left.png"
         right = "images/icons/sheriff_right.png"
-        scale = 6
-        super().__init__(pos, scale, front, back, left, right)
+        size = (128,128)
+        super().__init__(pos, size, front, back, left, right)
 
 class Rock(StaticItem):
     def __init__(self, pos):
         front = "images/icons/rock1.png"
-        scale = 2
-        super().__init__(pos, scale, front)
+        size = (48,48)
+        super().__init__(pos, size, front)
