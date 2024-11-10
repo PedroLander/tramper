@@ -21,8 +21,10 @@ class StaticItem(Item):
         self.img = super().load_img(img)
 
 class MovingItem(Item):
-    def __init__(self, pos, scale, f_img, b_img, l_img, r_img):
+    def __init__(self, pos, scale, speed, f_img, b_img, l_img, r_img):
         super().__init__(pos, scale)
+        self.pos = pos
+        self.speed = speed
 
         self.f_img = super().load_img(f_img)
         self.b_img = super().load_img(b_img)
@@ -42,7 +44,7 @@ class MovingItem(Item):
             self.img = self.r_img
 
     def move(self, delta):
-        self.pos = [a-b for a, b in zip(self.pos, delta)]
+        self.pos = [a+b for a, b in zip(self.pos, delta)]
 
 class Human(MovingItem):
     def __init__(self, pos):
@@ -51,7 +53,8 @@ class Human(MovingItem):
         left = "images/icons/sheriff_left.png"
         right = "images/icons/sheriff_right.png"
         size = (128,128)
-        super().__init__(pos, size, front, back, left, right)
+        speed = 10
+        super().__init__(pos, size, speed, front, back, left, right)
 
 class Rock(StaticItem):
     def __init__(self, pos):
