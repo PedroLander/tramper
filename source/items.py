@@ -1,26 +1,29 @@
+"""Module for implementation of the objects"""
+
 import pygame
 
 class Item():
+    """Generic item class, for all beings in the game"""
     def __init__(self, pos, size):
         self.pos = pos
         #size is a tuple of (width, height) pixels
         self.size = size
 
     def load_img(self, file):
+        """Loads an image and returns the Surface object sized"""
         img = pygame.image.load(file).convert_alpha()
-
-        #img_width, img_height = img.get_size()
-        #new_size = (int(img_width*self.scale),
-        #            int(img_height*self.scale))
         img = pygame.transform.scale(img, self.size)
         return img
 
 class StaticItem(Item):
+    """Class defining an item that can not move and will show always the same 
+    face"""
     def __init__(self, pos, scale, img):
         super().__init__(pos, scale)
         self.img = super().load_img(img)
 
 class MovingItem(Item):
+    """Class for an item that will move and can show different faces"""
     def __init__(self, pos, scale, speed, f_img, b_img, l_img, r_img):
         super().__init__(pos, scale)
         self.pos = pos
@@ -34,6 +37,7 @@ class MovingItem(Item):
         self.set_facing("front")
 
     def set_facing(self, facing):
+        """Method for selecting the image that will be shown"""
         if facing == "front":
             self.img = self.f_img
         if facing == "back":
@@ -44,9 +48,11 @@ class MovingItem(Item):
             self.img = self.r_img
 
     def move(self, delta):
+        """Method for updating the possition of the item"""
         self.pos = [a+b for a, b in zip(self.pos, delta)]
 
 class Human(MovingItem):
+    """Human class"""
     def __init__(self, pos):
         front = "images/icons/sheriff_front.png"
         back = "images/icons/sheriff_back.png"
@@ -57,6 +63,7 @@ class Human(MovingItem):
         super().__init__(pos, size, speed, front, back, left, right)
 
 class Rock(StaticItem):
+    """Rock class"""
     def __init__(self, pos):
         front = "images/icons/rock1.png"
         size = (48,48)

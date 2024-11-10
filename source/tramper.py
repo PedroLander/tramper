@@ -1,8 +1,11 @@
+"""Module that contains the main game class"""
+
 import pygame
 from items import Human, Rock
 from funcs import pos_to_pix
 
 class Game():
+    """The main game class"""
     def __init__(self):
         self.screen_width = 500
         self.screen_height = 400
@@ -10,7 +13,6 @@ class Game():
 
         self.bbox = [-self.screen_width//2, self.screen_width//2,
                      self.screen_height//2, -self.screen_height//2]
-        
         getattr(pygame, "init")()
         screen = pygame.display.set_mode(
                 (self.screen_width,self.screen_height))
@@ -26,7 +28,6 @@ class Game():
         my_font = pygame.font.SysFont('Arial', 15)
 
         running = True
-    
         while running :
             #The optional argument limits the fps (not very accurate).
             self.clock.tick(40)
@@ -37,7 +38,6 @@ class Game():
             screen.fill((100,155,100))
 
             keys = pygame.key.get_pressed()
-        
             if keys[pygame.K_DOWN]:
                 h1.set_facing("front")
                 h1.move((0,-h1.speed))
@@ -58,13 +58,13 @@ class Game():
                 h1.move((h1.speed,0))
                 if h1.pos[0]>self.bbox[1]:
                     self.load_tile("right")
-            
             screen.blits([(item.img,pos_to_pix(
                 self.bbox,item.pos,item.size)) for item in items])
 
             pygame.display.flip()
 
     def load_tile(self, side):
+        """Updates the object bounding box after pressing a key"""
         match side:
             case "down":
                 self.bbox[2]=self.bbox[3]
