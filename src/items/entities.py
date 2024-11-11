@@ -8,12 +8,20 @@ class Item():
         self.pos = pos
         #size is a tuple of (width, height) pixels
         self.size = size
+        self.rect = pygame.Rect(pos[0]-(size[0]//2),
+                                pos[1]+(size[1]//2),
+                                size[0],
+                                size[1])
 
     def load_img(self, file):
         """Loads an image and returns the Surface object sized"""
         img = pygame.image.load(file).convert_alpha()
         img = pygame.transform.scale(img, self.size)
         return img
+    
+    def draw(self, screen):
+        print (self.pos)
+        screen.blit(self.img, pos_to_pix(self.pos))
 
 class StaticItem(Item):
     """Class defining an item that can not move and will show always the same 
@@ -50,14 +58,15 @@ class MovingItem(Item):
     def move(self, delta):
         """Method for updating the possition of the item"""
         self.pos = [a+b for a, b in zip(self.pos, delta)]
+        self.rect = self.rect.move(delta[0],delta[1])
 
 class Human(MovingItem):
     """Human class"""
     def __init__(self, pos):
-        front = "images/icons/sheriff_front.png"
-        back = "images/icons/sheriff_back.png"
-        left = "images/icons/sheriff_left.png"
-        right = "images/icons/sheriff_right.png"
+        front = "assets/images/icons/sheriff_front.png"
+        back = "assets/images/icons/sheriff_back.png"
+        left = "assets/images/icons/sheriff_left.png"
+        right = "assets/images/icons/sheriff_right.png"
         size = (128,128)
         speed = 10
         super().__init__(pos, size, speed, front, back, left, right)
@@ -65,6 +74,6 @@ class Human(MovingItem):
 class Rock(StaticItem):
     """Rock class"""
     def __init__(self, pos):
-        front = "images/icons/rock1.png"
+        front = "assets/images/icons/rock1.png"
         size = (48,48)
         super().__init__(pos, size, front)
