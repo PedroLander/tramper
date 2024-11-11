@@ -1,6 +1,7 @@
 """Module for implementation of the objects"""
 
 import pygame
+from ..engine.funcs import pos_to_pix
 
 class Item():
     """Generic item class, for all beings in the game"""
@@ -19,15 +20,14 @@ class Item():
         img = pygame.transform.scale(img, self.size)
         return img
     
-    def draw(self, screen):
-        print (self.pos)
-        screen.blit(self.img, pos_to_pix(self.pos))
+    def draw(self, screen, bbox):
+        screen.blit(self.img, pos_to_pix(bbox, self.pos, self.size))
 
 class StaticItem(Item):
     """Class defining an item that can not move and will show always the same 
     face"""
-    def __init__(self, pos, scale, img):
-        super().__init__(pos, scale)
+    def __init__(self, pos, size, img):
+        super().__init__(pos, size)
         self.img = super().load_img(img)
 
 class MovingItem(Item):
