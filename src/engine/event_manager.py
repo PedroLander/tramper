@@ -26,7 +26,7 @@ class EventManager():
                 #Change plot being rendered if necesary
                 if curr_scene.player.tile_pos[1]>curr_scene.tile_bbox_shown[3]:
                     curr_scene.tile_bbox_shown = move_bbox("down",curr_scene.tile_bbox_shown,config)
-                    curr_scene.tiles_shown=create_tiles(curr_scene.tile_bbox_shown, config)
+                    curr_scene.tiles_shown=create_tiles(curr_scene.tile_bbox_shown)
                     curr_scene.tiles_shown = tiles_to_pix(curr_scene.tile_bbox_shown, config)
                 # Fill destination tile content
                 curr_scene.tiles[curr_scene.player.tile_pos]["content"]=curr_scene.player
@@ -44,7 +44,7 @@ class EventManager():
                 #Change plot being rendered if necesary
                 if curr_scene.player.tile_pos[1]<curr_scene.tile_bbox_shown[2]:
                     curr_scene.tile_bbox_shown = move_bbox("up",curr_scene.tile_bbox_shown,config)
-                    curr_scene.tiles_shown=create_tiles(curr_scene.tile_bbox_shown, config)
+                    curr_scene.tiles_shown=create_tiles(curr_scene.tile_bbox_shown)
                     curr_scene.tiles_shown = tiles_to_pix(curr_scene.tile_bbox_shown, config)
                 # Fill destination tile content
                 curr_scene.tiles[curr_scene.player.tile_pos]["content"]=curr_scene.player
@@ -62,7 +62,7 @@ class EventManager():
                 #Change plot being rendered if necesary
                 if curr_scene.player.tile_pos[0]<curr_scene.tile_bbox_shown[0]:
                     curr_scene.tile_bbox_shown = move_bbox("left",curr_scene.tile_bbox_shown,config)
-                    curr_scene.tiles_shown=create_tiles(curr_scene.tile_bbox_shown, config)
+                    curr_scene.tiles_shown=create_tiles(curr_scene.tile_bbox_shown)
                     curr_scene.tiles_shown = tiles_to_pix(curr_scene.tile_bbox_shown, config)
                 # Fill destination tile content
                 curr_scene.tiles[curr_scene.player.tile_pos]["content"]=curr_scene.player
@@ -80,7 +80,7 @@ class EventManager():
                 #Change plot being rendered if necesary
                 if curr_scene.player.tile_pos[0]>curr_scene.tile_bbox_shown[1]:
                     curr_scene.tile_bbox_shown = move_bbox("right",curr_scene.tile_bbox_shown,config)
-                    curr_scene.tiles_shown=create_tiles(curr_scene.tile_bbox_shown, config)
+                    curr_scene.tiles_shown=create_tiles(curr_scene.tile_bbox_shown)
                     curr_scene.tiles_shown = tiles_to_pix(curr_scene.tile_bbox_shown, config)
                 # Fill destination tile content
                 curr_scene.tiles[curr_scene.player.tile_pos]["content"]=curr_scene.player

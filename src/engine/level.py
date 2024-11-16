@@ -2,6 +2,7 @@ import pygame
 from random import randint
 from  src.items.player import Player
 from  ..items.plants import Quartz
+from src.items.entities import RedFox
 from  src.engine.funcs import move_bbox, create_tiles, tiles_to_pix
 
 from itertools import product
@@ -30,7 +31,7 @@ class Level:
                                 vert_bbox_shown_limit_ini]
 
         # Create the grid of tiles inside the bounding box
-        self.tiles = create_tiles(self.tile_bbox, config)
+        self.tiles = create_tiles(self.tile_bbox)
 
         # Dict of the tiles to be rendered.
         self.tiles_shown = tiles_to_pix(self.tile_bbox_shown, config)
@@ -49,6 +50,7 @@ class Level:
             self.items.append(
                 Quartz((randint(self.tile_bbox[0], self.tile_bbox[1]),
                         randint(self.tile_bbox[2], self.tile_bbox[3]))))
+        self.items.append(RedFox((12,5)))
 
         # Place the items in the tile
         for item in self.items:
@@ -58,6 +60,9 @@ class Level:
         #Updates all item's state
         for item in self.items:
             item.update_item()
+            try:
+                item.roam()
+            except: continue
 
     def draw(self):
         # Clean the screen

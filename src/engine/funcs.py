@@ -24,10 +24,10 @@ def bbox_to_grid(bbox):
                             range(bbox[2],bbox[3]+1))]
     return grid
 
-def create_tiles(tile_bbox, config):
+def create_tiles(tile_bbox):
     """
-    Creates a dictionary with the coordinates of a plot as keys and the 
-    properties and content of the tile as a value.
+    Creates a dictionary with the coordinates as keys and properties and 
+    content of the tile as a value.
 
     Args:
         tile_bbox: bounding box of the plot.
