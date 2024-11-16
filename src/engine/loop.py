@@ -1,14 +1,13 @@
 """Module that contains the main game class"""
 import pygame
-from ..scenes.level import Level
-
+from src.engine.level import Level
 class MainLoop():
     """The main game class"""
-    def __init__(self, screen):
+    def __init__(self, config, screen):
         self.screen = screen
-        self.curr_scene = Level(self.screen)
+        self.curr_scene = Level(config, self.screen)
 
-    def run(self):
+    def run(self, config):
         """The loop to run the pygame game engine"""
         running = True
         while running :
@@ -19,10 +18,10 @@ class MainLoop():
                     running = False
 
             keys = pygame.key.get_pressed()
-            self.curr_scene.event_mngr(keys)
+            self.curr_scene.event_mngr(config, keys)
 
         # 2. Update scene... Calls to Level's updating method
-            self.curr_scene.update()
+            self.curr_scene.update_level()
 
         # 3. Manage collisions... Calls to Level's collision manager method
             self.curr_scene.collision_mngr()
@@ -32,4 +31,5 @@ class MainLoop():
             pygame.display.flip()
 
             #The optional argument limits the fps (not very accurate).
-            pygame.time.Clock().tick(30)
+            pygame.time.Clock().tick(10)
+

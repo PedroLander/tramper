@@ -1,18 +1,16 @@
 """Module for implementation of the objects"""
 
 import pygame
-from ..engine.funcs import pos_to_pix
 
-class Item():
+class Item(pygame.sprite.Sprite):
     """Generic item class, for all beings in the game"""
-    def __init__(self, pos, size):
-        self.pos = pos
+    def __init__(self, tile_pos, size):
+        # Call the parent class (Sprite) constructor
+        pygame.sprite.Sprite.__init__(self)
+
+        self.tile_pos = tile_pos
         #size is a tuple of (width, height) pixels
         self.size = size
-        self.rect = pygame.Rect(pos[0]-(size[0]//2),
-                                pos[1]+(size[1]//2),
-                                size[0],
-                                size[1])
 
     def load_img(self, file):
         """Loads an image and returns the Surface object sized"""
@@ -20,21 +18,28 @@ class Item():
         img = pygame.transform.scale(img, self.size)
         return img
     
-    def draw(self, screen, bbox):
-        screen.blit(self.img, pos_to_pix(bbox, self.pos, self.size))
+    def draw(self, screen, pix):
+        try:
+            screen.blit(self.img, pix)
+        except:
+            # Show something if picture is not loaded
+            pass
+    
+    def update_item(self):
+        pass
 
 class StaticItem(Item):
     """Class defining an item that can not move and will show always the same 
     face"""
-    def __init__(self, pos, size, img):
-        super().__init__(pos, size)
+    def __init__(self, tile_pos, size, img):
+        super().__init__(tile_pos, size)
         self.img = super().load_img(img)
+        self.rect = self.img.get_rect()
 
 class MovingItem(Item):
     """Class for an item that will move and can show different faces"""
-    def __init__(self, pos, scale, speed, f_img, b_img, l_img, r_img):
-        super().__init__(pos, scale)
-        self.pos = pos
+    def __init__(self, tile_pos, size, speed, f_img, b_img, l_img, r_img):
+        super().__init__(tile_pos, size)
         self.speed = speed
 
         self.f_img = super().load_img(f_img)
@@ -54,11 +59,11 @@ class MovingItem(Item):
             self.img = self.l_img
         if facing == "right":
             self.img = self.r_img
-
+        
     def move(self, delta):
+        ######## Mirar esto
         """Method for updating the possition of the item"""
-        self.pos = [a+b for a, b in zip(self.pos, delta)]
-        self.rect = self.rect.move(delta[0],delta[1])
+        self.tile_pos = tuple([(a+b) for a, b in zip(self.tile_pos, delta)])
 
 class Human(MovingItem):
     """Human class"""
@@ -67,13 +72,13 @@ class Human(MovingItem):
         back = "assets/images/icons/sheriff_back.png"
         left = "assets/images/icons/sheriff_left.png"
         right = "assets/images/icons/sheriff_right.png"
-        size = (128,128)
-        speed = 10
+        size = (64,64)
+        speed = 1
         super().__init__(pos, size, speed, front, back, left, right)
 
 class Rock(StaticItem):
     """Rock class"""
     def __init__(self, pos):
         front = "assets/images/icons/rock1.png"
-        size = (48,48)
+        size = (64,64)
         super().__init__(pos, size, front)

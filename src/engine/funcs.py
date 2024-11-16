@@ -1,23 +1,55 @@
+from itertools import product
 """Auxiliary functions"""
 
-def pos_to_pix(bbox, pos, size):
-    """Transforms the coordinates to pixel position"""
-#transform possition to pixels
-    return (pos[0]-(bbox[0])-size[0]//2,
-            -pos[1]+bbox[2]-size[1]//2)
-
-def load_tile(side, bbox, screen_height, screen_width):
+def move_bbox(side, tile_bbox, config):
     """Updates the object bounding box after pressing a key"""
     match side:
         case "down":
-            bbox[2]=bbox[3]
-            bbox[3]=bbox[3]-screen_height
+            tile_bbox[2]=tile_bbox[3]+1
+            tile_bbox[3]=tile_bbox[3]+config.N_VERT_TILES_SHOWN
         case "up":
-            bbox[3]=bbox[2]
-            bbox[2]=bbox[2]+screen_height
+            tile_bbox[3]=tile_bbox[2]-1
+            tile_bbox[2]=tile_bbox[2]-config.N_VERT_TILES_SHOWN
         case "left":
-            bbox[1]=bbox[0]
-            bbox[0]=bbox[0]-screen_width
+            tile_bbox[1]=tile_bbox[0]-1
+            tile_bbox[0]=tile_bbox[0]-config.N_HORIZ_TILES_SHOWN
         case "right":
-            bbox[0]=bbox[1]
-            bbox[1]=bbox[1]+screen_width
+            tile_bbox[0]=tile_bbox[1]+1
+            tile_bbox[1]=tile_bbox[1]+config.N_HORIZ_TILES_SHOWN
+    return tile_bbox
+
+def create_tiles(tile_bbox, config):
+    """
+    Creates a dictionary with the coordinates of a plot as keys and the 
+    properties and content of the tile as a value.
+
+    Args:
+        tile_bbox: bounding box of the plot.
+        config: configuration data with number of tiles and tile sizes.
+
+    Returns:
+        dict: plot content
+        
+    Example:
+        {(1, 2): {'pix': (64, 128),
+          'content': <Player Sprite(in 0 groups)>,...}
+    """
+    tile_nums = [(a, b) for a, b in product(
+                            range(tile_bbox[0],tile_bbox[1]+1),
+                            range(tile_bbox[2],tile_bbox[3]+1))]
+    tile_pixels = [(config.TILE_WIDTH*h, config.TILE_HEIGHT*v)
+                        for h, v in product(
+                            range(config.N_HORIZ_TILES_SHOWN),
+                            range(config.N_VERT_TILES_SHOWN))]
+    tile_num_pix =[(a, b) for a, b in zip(tile_nums, tile_pixels)]
+    tiles = {}
+    for tile in tile_num_pix:
+        new_tile = {}
+        new_tile["pix"] = tile[1]
+        new_tile["content"] = None
+        new_tile["light"] = 5
+        tiles[tile[0]] = new_tile
+    return tiles
+
+def tiles_to_pix(plot_bbox, configuration):
+    pass
