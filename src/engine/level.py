@@ -1,9 +1,10 @@
 import pygame
 from random import randint
-from  src.items.player import Player
-from  ..items.plants import Quartz
-from src.items.entities import RedFox
-from  src.engine.funcs import move_bbox, create_tiles, tiles_to_pix
+from ..items.player import Player
+from ..items.rocks import Quartz
+from ..items.plants import Grass
+from ..items.animals import RedFox
+from src.engine.funcs import move_bbox, create_tiles, tiles_to_pix
 
 from itertools import product
 #from ...config import Configuration
@@ -50,7 +51,12 @@ class Level:
             self.items.append(
                 Quartz((randint(self.tile_bbox[0], self.tile_bbox[1]),
                         randint(self.tile_bbox[2], self.tile_bbox[3]))))
-        self.items.append(RedFox((12,5)))
+        for _ in range(randint(10,20)):
+            self.items.append(
+                Grass((randint(self.tile_bbox[0], self.tile_bbox[1]),
+                    randint(self.tile_bbox[2], self.tile_bbox[3]))))
+        self.items.append(RedFox((2,5)))
+        self.items.append(RedFox((1,-3)))
 
         # Place the items in the tile
         for item in self.items:
@@ -65,8 +71,6 @@ class Level:
             except: continue
 
     def draw(self):
-        # Clean the screen
-        self.screen.fill((0,100,0))
         # Draw the items in the screen
         for item in self.items:
             if item.tile_pos in self.tiles_shown:

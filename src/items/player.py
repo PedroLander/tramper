@@ -1,4 +1,7 @@
 from src.items.entities import Human
 
 class Player(Human):
-    pass
+    def interact(self, item):
+        """Interaction of the player with the item"""
+        print (type(item))
+        pass
