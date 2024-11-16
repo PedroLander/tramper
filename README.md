@@ -3,3 +3,6 @@ Tramper is a simulation game about roaming in the nature, learning about wild pl
 
 ### Development notes
 The physics of the game are calculated in blocks, referred as _tiles_. It is possible to configure a size for the simulation and for the area shown.
+
+### Screenshots
+![screenshot 1](https://github.com/pedrolander/tramper/blob/main/Screenshot_2024-11-16_19-20-40.png?raw=true)
