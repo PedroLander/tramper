@@ -12,10 +12,12 @@ class EventManager():
         pass
     def check_obstacles(curr_scene):
         pass
-    def interact(self, item1, item2):
-        print (f"Interaction between {item1} and {item2}")
-        if item1 == self.curr_scene.player:
-            self.curr_scene.player.interact(item2)
+    def grab(self, item1, item2, panel):
+        self.curr_scene.tiles[item2.tile_pos]["content"]=None
+        item1.inventory.append(item2)
+        item2.display=False
+        item2.tile_pos = item1.tile_pos
+        panel.show_msg(item2.name+" grabbed. Added to inventory.")
 
     def arrow_stroke(self, direction, config):
         self.curr_scene.player.set_facing(direction)
@@ -46,7 +48,7 @@ class EventManager():
                 # Fill destination tile content
                 self.curr_scene.tiles[self.curr_scene.player.tile_pos]["content"]=self.curr_scene.player
 
-    def manage_event(self, config, keys):
+    def manage_event(self, config, keys, panel):
 
         if keys[pygame.K_DOWN]:
             self.arrow_stroke("down", config)
@@ -59,6 +61,9 @@ class EventManager():
 
         if keys[pygame.K_e]:
             delta = self.dirs[self.curr_scene.player.facing]
-            tile_obj = tuple(sum(t) for t in zip(self.curr_scene.player.tile_pos,delta))
-            item = self.curr_scene.tiles[tile_obj]["content"]
-            self.interact(self.curr_scene.player, item)
+            tile_dest = tuple(sum(t) for t in zip(self.curr_scene.player.tile_pos,delta))
+            item = self.curr_scene.tiles[tile_dest]["content"]
+            if item:
+                self.grab(self.curr_scene.player, item, panel)
+            else:
+                panel.show_msg("Nothing to grab.")

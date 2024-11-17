@@ -74,7 +74,8 @@ class Level:
         # Draw the items in the screen
         for item in self.items:
             if item.tile_pos in self.tiles_shown:
-                item.draw(self.screen,self.tiles_shown[item.tile_pos]["pix"])
+                if item.display == True:
+                    item.draw(self.screen,self.tiles_shown[item.tile_pos]["pix"])
 
     def collision_mngr(self):
         pass

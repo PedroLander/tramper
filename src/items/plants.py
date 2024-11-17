@@ -2,9 +2,11 @@ from ..items.entities import StaticItem
 
 class Plant(StaticItem):
     """Plant class"""
-    def __init__(self, pos, img_name="plant"):
+    def __init__(self, name, pos, img_name="plant"):
         size = (64,64)
-        super().__init__(pos, size, img_name)
+        super().__init__(name, pos, size, img_name)
 
 class Grass(Plant):
-    pass
+    def __init__(self, pos):
+        name = "Grass"
+        super().__init__(name, pos)

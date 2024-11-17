@@ -5,16 +5,18 @@ from config import Configuration
 
 class Item(pygame.sprite.Sprite):
     """Generic item class, for all beings in the game"""
-    def __init__(self, tile_pos, size):
+    def __init__(self, name, tile_pos, size):
         # Call the parent class (Sprite) constructor
         pygame.sprite.Sprite.__init__(self)
-
+        self.name = name
         self.tile_pos = tile_pos
         #size is a tuple of (width, height) pixels
         self.size = []
         self.size.append(size[0]*Configuration.ZOOM_LEVEL)
         self.size.append(size[1]*Configuration.ZOOM_LEVEL)
         self.size = tuple(self.size)
+        self.inventory = []
+        self.display = True
 
     def load_img(self, img_name):
         """Loads an image and returns the Surface object sized"""
@@ -36,15 +38,15 @@ class Item(pygame.sprite.Sprite):
 class StaticItem(Item):
     """Class defining an item that can not move and will show always the same 
     face"""
-    def __init__(self, tile_pos, size, img_name):
-        super().__init__(tile_pos, size)
+    def __init__(self, name, tile_pos, size, img_name):
+        super().__init__(name, tile_pos, size)
         self.img = super().load_img(img_name)
         self.rect = self.img.get_rect()
 
 class MovingItem(Item):
     """Class for an item that will move and can show different faces"""
-    def __init__(self, tile_pos, size, facing, speed, img_name, frec_movement=0):
-        super().__init__(tile_pos, size)
+    def __init__(self, name, tile_pos, size, facing, speed, img_name, frec_movement=0):
+        super().__init__(name, tile_pos, size)
         self.facing = facing
         self.speed = speed
         self.frec_movement = frec_movement
@@ -84,10 +86,11 @@ class MovingItem(Item):
 class Human(MovingItem):
     """Human class"""
     def __init__(self, pos):
+        name = "Human"
         img_name = "sheriff"
         size = (64,64)
         init_facing = "down"
         speed = 1
-        super().__init__(pos, size, init_facing, speed, img_name)
+        super().__init__(name, pos, size, init_facing, speed, img_name)
 
 
