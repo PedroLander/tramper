@@ -41,7 +41,6 @@ class StaticItem(Item):
     def __init__(self, name, tile_pos, size, img_name):
         super().__init__(name, tile_pos, size)
         self.img = super().load_img(img_name)
-        self.rect = self.img.get_rect()
 
 class MovingItem(Item):
     """Class for an item that will move and can show different faces"""

@@ -43,7 +43,7 @@ class MainLoop():
             self.screen.fill((0,100,0))
             self.curr_scene.draw()
 
-            self.screen.blit(self.panel,(0,config.TILE_HEIGHT*config.N_VERT_TILES_SHOWN))
+            self.screen.blit(self.panel,(0,config.TILE_HEIGHT*config.N_Y_TILES_SHOWN))
 
             pygame.display.flip()
 

@@ -6,22 +6,28 @@ def move_bbox(side, tile_bbox, config):
     match side:
         case "down":
             tile_bbox[2]=tile_bbox[3]+1
-            tile_bbox[3]=tile_bbox[3]+config.N_VERT_TILES_SHOWN
+            tile_bbox[3]=tile_bbox[3]+config.N_Y_TILES_SHOWN
         case "up":
             tile_bbox[3]=tile_bbox[2]-1
-            tile_bbox[2]=tile_bbox[2]-config.N_VERT_TILES_SHOWN
+            tile_bbox[2]=tile_bbox[2]-config.N_Y_TILES_SHOWN
         case "left":
             tile_bbox[1]=tile_bbox[0]-1
-            tile_bbox[0]=tile_bbox[0]-config.N_HORIZ_TILES_SHOWN
+            tile_bbox[0]=tile_bbox[0]-config.N_X_TILES_SHOWN
         case "right":
             tile_bbox[0]=tile_bbox[1]+1
-            tile_bbox[1]=tile_bbox[1]+config.N_HORIZ_TILES_SHOWN
+            tile_bbox[1]=tile_bbox[1]+config.N_X_TILES_SHOWN
     return tile_bbox
 
 def bbox_to_grid(bbox):
-    grid = [(a, b) for a, b in product(
-                            range(bbox[0],bbox[1]+1),
-                            range(bbox[2],bbox[3]+1))]
+    if len(bbox)<5:
+        grid = [(x, y) for x, y in product(
+                                range(bbox[0],bbox[1]+1),
+                                range(bbox[2],bbox[3]+1))]
+    elif len(bbox)>5:
+        grid = [(x, y, z) for x, y, z in product(
+                                range(bbox[0],bbox[1]+1),
+                                range(bbox[2],bbox[3]+1),
+                                range(bbox[4],bbox[5]+1))]
     return grid
 
 def create_tiles(tile_bbox):
@@ -56,8 +62,8 @@ def tiles_to_pix(tile_bbox_shown, config):
                             range(tile_bbox_shown[2],tile_bbox_shown[3]+1))]
     tile_pixels = [(config.TILE_WIDTH*h, config.TILE_HEIGHT*v)
                         for h, v in product(
-                            range(config.N_HORIZ_TILES_SHOWN),
-                            range(config.N_VERT_TILES_SHOWN))]
+                            range(config.N_X_TILES_SHOWN),
+                            range(config.N_Y_TILES_SHOWN))]
     tile_num_pix =[(a, b) for a, b in zip(tile_nums, tile_pixels)]
     tiles = {}
     for tile in tile_num_pix:

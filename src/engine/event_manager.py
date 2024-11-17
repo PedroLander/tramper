@@ -4,7 +4,7 @@ from  src.engine.funcs import move_bbox, create_tiles, tiles_to_pix
 class EventManager():
     def __init__(self, curr_scene):
         self.curr_scene = curr_scene
-        self.dirs = {"down":(0,1),"up":(0,-1),"left":(-1,0),"right":(1,0)}
+        self.dirs = {"down":(0,1,0),"up":(0,-1,0),"left":(-1,0,0),"right":(1,0,0)}
 
     def move_down(curr_scene):
         pass
@@ -19,10 +19,12 @@ class EventManager():
         item2.tile_pos = item1.tile_pos
         panel.show_msg(item2.name+" grabbed. Added to inventory.")
 
-    def arrow_stroke(self, direction, config):
+    def arrow_stroke(self, direction, config, panel):
         self.curr_scene.player.set_facing(direction)
         speed = self.curr_scene.player.speed
-        delta = (speed*self.dirs[direction][0],speed*self.dirs[direction][1])
+        delta = (speed*self.dirs[direction][0],
+                 speed*self.dirs[direction][1],
+                 speed*self.dirs[direction][2])
 
         # Check for obstacles
         dest = tuple(
@@ -51,13 +53,13 @@ class EventManager():
     def manage_event(self, config, keys, panel):
 
         if keys[pygame.K_DOWN]:
-            self.arrow_stroke("down", config)
+            self.arrow_stroke("down", config, panel)
         if keys[pygame.K_UP]:
-            self.arrow_stroke("up", config)
+            self.arrow_stroke("up", config, panel)
         if keys[pygame.K_LEFT]:
-            self.arrow_stroke("left", config)
+            self.arrow_stroke("left", config, panel)
         if keys[pygame.K_RIGHT]:
-            self.arrow_stroke("right", config)
+            self.arrow_stroke("right", config, panel)
 
         if keys[pygame.K_e]:
             delta = self.dirs[self.curr_scene.player.facing]
