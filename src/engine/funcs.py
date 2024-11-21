@@ -72,5 +72,5 @@ def tiles_to_pix(tile_bbox_shown, config):
         tiles[tile[0]] = new_tile
     return tiles
 
-
-    # new_tile["pix"] = tile[1]
+def save_configuration(configuration):
+    pass

@@ -71,7 +71,7 @@ class MovingItem(Item):
         if facing == "right":
             self.facing = "right"
             self.img = self.r_img
-        
+         
     def move(self, delta):
         """Method for updating the possition of the item"""
         self.tile_pos = tuple([(a+b) for a, b in zip(self.tile_pos, delta)])
@@ -81,15 +81,3 @@ class MovingItem(Item):
             move_to = random.choice(list(Configuration.directions))
             self.set_facing(move_to)
             self.move(Configuration.directions[move_to])
-
-class Human(MovingItem):
-    """Human class"""
-    def __init__(self, pos):
-        name = "Human"
-        img_name = "sheriff"
-        size = (64,64)
-        init_facing = "down"
-        speed = 1
-        super().__init__(name, pos, size, init_facing, speed, img_name)
-
-

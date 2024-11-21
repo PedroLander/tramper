@@ -8,7 +8,7 @@ def main():
     config = Configuration()
     pygame.init()
     screen = pygame.display.set_mode(
-        (config.SCREEN_WIDTH, config.SCREEN_HEIGHT))
+        (config.display_width, config.display_height))
     loop = MainLoop(config, screen)
     loop.run(config)
 

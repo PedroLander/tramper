@@ -1,4 +1,4 @@
-from src.items.entities import Human
+from ..items.animals import Human
 
 class Player(Human):        
         pass
