@@ -6,7 +6,7 @@ class Layout(pygame.Surface):
         super().__init__((config.display_width, config.display_height))
         
         self.surface1 = pygame.Surface((config.surface1_width,config.surface1_height))
-        self.surface2 = pygame.Surface((config.surface2_width,config.surface3_height))
+        self.surface2 = pygame.Surface((config.surface2_width,config.surface2_height))
         self.surface3 = pygame.Surface((config.surface3_width,config.surface3_height))
 
         self.font = 'Comic Sans MS'

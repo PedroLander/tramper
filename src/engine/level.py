@@ -18,10 +18,10 @@ class Level:
      - A dict of the tiles simulated.
      - A dict of the tiles being rendered at the momment
     """
-    def __init__(self, config, screen):
+    def __init__(self, config, layout):
         
         # Calculate bounding box of the plot
-        self.screen = screen
+        self.layout = layout
         x_bbox_limit_ini = int((config.N_X_TILES/2)-0.5)
         y_bbox_limit_ini = int((config.N_Y_TILES/2)-0.5)
         z_bbox_limit_ini = int((config.N_Z_TILES/2)-0.5)
@@ -88,9 +88,19 @@ class Level:
             except: continue
 
     def draw(self):
-        # Draw the items in the screen
+        # Clear the tile surface before drawing to avoid ghosting/gaps
+        try:
+            self.layout.surface1.fill((0,0,0))
+        except Exception:
+            # If layout or surface1 isn't available, silently continue
+            pass
+
+        # Draw the items onto the tile surface
         for item in self.items:
             # If the first 2 (x, y) coordinates of the item are in the box shown
             if item.tile_pos[:2] in self.tiles_shown:
                 if item.display == True:
-                    item.draw(self.screen,self.tiles_shown[item.tile_pos[:2]]["pix"])
+                    pix = self.tiles_shown[item.tile_pos[:2]]["pix"]
+                    # Ensure pixel positions are integers to avoid subpixel gaps
+                    pix = (int(pix[0]), int(pix[1]))
+                    item.draw(self.layout.surface1, pix)

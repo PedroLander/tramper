@@ -8,13 +8,14 @@ class MainLoop():
     """The main game class"""
     def __init__(self, config, screen):
         self.screen = screen
-        self.curr_scene = Level(config, self.screen)
+
+
+
+        # Surface layout
+        self.layout = Layout(config)
+        self.curr_scene = Level(config, self.layout)
         self.event_mngr = EventManager(self.curr_scene)
         self.running = True
-
-
-        # Text background
-        self.layout = Layout(config)
 
     def run(self, config):
         """The loop to run the pygame game engine"""
@@ -23,7 +24,7 @@ class MainLoop():
         # 1. Capture events
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    running = False
+                    self.running = False
 
             keys = pygame.key.get_pressed()
             self.event_mngr.manage_event(config, keys, self.layout)
@@ -34,9 +35,15 @@ class MainLoop():
         # 4. Update screen
             # Clean the screen
             self.screen.fill((0,0,0))
-            self.screen.blit(self.layout,(0,0))
+
+            # Draw the scene onto its surfaces (e.g., layout.surface1)
             self.curr_scene.draw()
 
+            # Compose the layout by blitting panels onto the layout surface
+            self.layout.blit_pans(config)
+
+            # Blit the composed layout to the screen and flip
+            self.screen.blit(self.layout,(0,0))
             pygame.display.flip()
 
             #The optional argument limits the fps (not very accurate).
