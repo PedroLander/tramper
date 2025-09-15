@@ -1,4 +1,5 @@
 from itertools import product
+from typing import Tuple
 """Auxiliary functions"""
 
 def move_bbox(side, tile_bbox, config):
@@ -18,7 +19,16 @@ def move_bbox(side, tile_bbox, config):
             tile_bbox[1]=tile_bbox[1]+config.N_X_TILES_SHOWN
     return tile_bbox
 
-def bbox_to_grid(bbox):
+def bbox_to_grid(bbox) -> list[tuple[int, int]] | list[tuple[int, int, int]]:
+    """Creates a list of tuples with the coordinates of the tiles inside the
+    bounding box.
+    Args:
+        bbox: bounding box of the plot.
+    Returns:
+        list of tuples with the coordinates of the tiles inside the bounding box.
+    Example:
+        [(-2, -2), (-2, -1), (-2, 0),...]
+    """
     if len(bbox)<5:
         grid = [(x, y) for x, y in product(
                                 range(bbox[0],bbox[1]+1),
@@ -30,18 +40,15 @@ def bbox_to_grid(bbox):
                                 range(bbox[4],bbox[5]+1))]
     return grid
 
-def create_tiles(tile_bbox):
+def create_tiles(tile_bbox:Tuple[int, int, int, int, int, int, ]) -> dict:
     """
     Creates a dictionary with the coordinates as keys and properties and 
     content of the tile as a value.
-
     Args:
         tile_bbox: bounding box of the plot.
         config: configuration data with number of tiles and tile sizes.
-
     Returns:
-        dict: plot content
-        
+        dict: plot content 
     Example:
         {(1, 2): {'pix': (64, 128),
           'content': <Player Sprite(in 0 groups)>,...}
@@ -56,7 +63,18 @@ def create_tiles(tile_bbox):
         tiles[tile] = new_tile
     return tiles
 
-def tiles_to_pix(tile_bbox_shown, config):
+def tiles_to_pix(tile_bbox_shown, config) -> dict:
+    """Creates a dictionary with the coordinates of the tiles to be shown as
+    keys and the pixel position in the surface as values.
+    Args:
+        tile_bbox_shown: bounding box of the tiles to be shown.
+        config: configuration data with number of tiles and tile sizes.
+    Returns:
+        dict: tiles to be shown with pixel position.
+    Example:
+        {(1, 2): {'pix': (64, 128)},
+         (1, 3): {'pix': (64, 192)},...}
+    """
     tile_nums = [(a, b) for a, b in product(
                             range(tile_bbox_shown[0],tile_bbox_shown[1]+1),
                             range(tile_bbox_shown[2],tile_bbox_shown[3]+1))]
@@ -64,12 +82,9 @@ def tiles_to_pix(tile_bbox_shown, config):
                         for h, v in product(
                             range(config.N_X_TILES_SHOWN),
                             range(config.N_Y_TILES_SHOWN))]
-    tile_num_pix =[(a, b) for a, b in zip(tile_nums, tile_pixels)]
     tiles = {}
-    for tile in tile_num_pix:
-        new_tile = {}
-        new_tile["pix"] = tile[1]
-        tiles[tile[0]] = new_tile
+    for a, b in zip(tile_nums, tile_pixels):
+        tiles[a] = {"pix":b}
     return tiles
 
 def save_configuration(configuration):

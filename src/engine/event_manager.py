@@ -57,13 +57,13 @@ class EventManager():
 
     def manage_event(self, config, keys, layout):
 
-        if keys[pygame.K_DOWN]:
+        if keys[pygame.K_s]:
             self.arrow_stroke("down", config, layout)
-        if keys[pygame.K_UP]:
+        if keys[pygame.K_w]:
             self.arrow_stroke("up", config, layout)
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_a]:
             self.arrow_stroke("left", config, layout)
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_d]:
             self.arrow_stroke("right", config, layout)
 
         if keys[pygame.K_e]:
@@ -75,7 +75,7 @@ class EventManager():
             else:
                 pass
 
-        if keys[pygame.K_d]:
+        if keys[pygame.K_r]:
             self.open_inventory(layout, config)
 
 

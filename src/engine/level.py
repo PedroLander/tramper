@@ -1,6 +1,6 @@
 import pygame
 from random import randint
-from ..items.blocks import GrassBlock
+from ..items.blocks import GrassBlock, StoneBlock, DirtBlock
 from ..items.rocks import Quartz
 from ..items.plants import Grass, AchilleaMillefolium
 from ..items.animals import RedFox
@@ -25,9 +25,9 @@ class Level:
         x_bbox_limit_ini = int((config.N_X_TILES/2)-0.5)
         y_bbox_limit_ini = int((config.N_Y_TILES/2)-0.5)
         z_bbox_limit_ini = int((config.N_Z_TILES/2)-0.5)
-        self.tile_bbox = [-x_bbox_limit_ini, x_bbox_limit_ini,
+        self.tile_bbox = (-x_bbox_limit_ini, x_bbox_limit_ini,
                           -y_bbox_limit_ini, y_bbox_limit_ini,
-                          -z_bbox_limit_ini, z_bbox_limit_ini]
+                          -z_bbox_limit_ini, z_bbox_limit_ini)
         x_bbox_shown_limit_ini = int((config.N_X_TILES_SHOWN/2)-0.5)
         y_bbox_shown_limit_ini = int((config.N_Y_TILES_SHOWN/2)-0.5)
         self.tile_bbox_shown = [-x_bbox_shown_limit_ini, 
@@ -47,33 +47,16 @@ class Level:
         # Create the ground blocks (z=0) and add them to the item list
         for tile in self.tiles:
             self.items.append(GrassBlock((tile[0],tile[1],0)))
+        self.items.append(StoneBlock((1,1,1)))
+        self.items.append(DirtBlock((1,1,2)))
+        self.items.append(Quartz((4,5,1)))
+        self.items.append(RedFox((2,5,1)))
 
 
         # Create the player and add it to the item list
         self.player = Player((0, 0, 1))
         self.items.append(self.player)
 
-        # Create other items and add them to the item list
-        for _ in range(randint(10,20)):
-            self.items.append(
-                Quartz((randint(self.tile_bbox[0], self.tile_bbox[1]),
-                        randint(self.tile_bbox[2], self.tile_bbox[3]), 
-                        1)))
-        for _ in range(randint(5,10)):
-            self.items.append(
-                AchilleaMillefolium((randint(self.tile_bbox[0], self.tile_bbox[1]),
-                        randint(self.tile_bbox[2], self.tile_bbox[3]), 
-                        1)))   
-        for _ in range(randint(10,20)):
-            self.items.append(
-                Grass((randint(self.tile_bbox[0], self.tile_bbox[1]),
-                    randint(self.tile_bbox[2], self.tile_bbox[3]),
-                    1)))
-        self.items.append(RedFox((2,5,0)))
-        self.items.append(RedFox((1,-3,0)))
-        self.items.append(RedFox((1,-3,0)))
-        self.items.append(RedFox((1,-3,0)))
-        self.items.append(RedFox((1,-3,0)))
 
         # Place the items in the tile
         for item in self.items:
@@ -98,9 +81,10 @@ class Level:
         # Draw the items onto the tile surface
         for item in self.items:
             # If the first 2 (x, y) coordinates of the item are in the box shown
-            if item.tile_pos[:2] in self.tiles_shown:
+            # Correction for the z axis projection
+            if item.rel_tile_pos in self.tiles_shown:
                 if item.display == True:
-                    pix = self.tiles_shown[item.tile_pos[:2]]["pix"]
+                    pix = self.tiles_shown[item.rel_tile_pos]["pix"]
                     # Ensure pixel positions are integers to avoid subpixel gaps
                     pix = (int(pix[0]), int(pix[1]))
                     item.draw(self.layout.surface1, pix)
