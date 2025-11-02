@@ -1,23 +1,25 @@
 """Module that contains the main game class"""
+from __future__ import annotations
 import pygame
+
 from src.engine.level import Level
 from src.engine.event_manager import EventManager
 from .layout import Layout
 
+from config import dynamic_config
+
 class MainLoop():
     """The main game class"""
-    def __init__(self, config, screen):
+    def __init__(self, screen: pygame.Surface):
         self.screen = screen
 
-
-
         # Surface layout
-        self.layout = Layout(config)
-        self.curr_scene = Level(config, self.layout)
+        self.layout = Layout()
+        self.curr_scene = Level(self.layout)
         self.event_mngr = EventManager(self.curr_scene)
         self.running = True
 
-    def run(self, config):
+    def run(self):
         """The loop to run the pygame game engine"""
         while self.running :
 
@@ -27,7 +29,7 @@ class MainLoop():
                     self.running = False
 
             keys = pygame.key.get_pressed()
-            self.event_mngr.manage_event(config, keys, self.layout)
+            self.event_mngr.manage_event(keys, self.layout)
 
         # 2. Update scene... Calls to Level's updating method
             self.curr_scene.update_level()
@@ -40,7 +42,7 @@ class MainLoop():
             self.curr_scene.draw()
 
             # Compose the layout by blitting panels onto the layout surface
-            self.layout.blit_pans(config)
+            self.layout.blit_pans()
 
             # Blit the composed layout to the screen and flip
             self.screen.blit(self.layout,(0,0))

@@ -1,31 +1,23 @@
 """Module for implementation of the objects"""
 import pygame
 import random
-from config import Configuration
+from config import StaticConfig, dynamic_config
+
 
 class Item(pygame.sprite.Sprite):
     """Generic item class, for all beings in the game"""
-    def __init__(self, name, tile_pos, size):
+    def __init__(self, name, tile_pos, size: tuple[int, int, int]):
         # Call the parent class (Sprite) constructor
         pygame.sprite.Sprite.__init__(self)
         self.name = name
         self.tile_pos = tile_pos
         #size is a tuple of (width, height) pixels
-        self.size = []
-        self.size.append(size[0]*Configuration.ZOOM_LEVEL)
-        self.size.append(size[1]*Configuration.ZOOM_LEVEL)
-        self.size = tuple(self.size)
+        self.size = size
         self.inventory = []
         self.display = True
-
-    def load_img(self, img_name):
-        """Loads an image and returns the Surface object sized"""
-        img_path = Configuration.ICONS_PATH
-        img = pygame.image.load(img_path+img_name+".png").convert_alpha()
-        img = pygame.transform.scale(img, self.size)
-        return img
+        self.img: pygame.Surface
     
-    def draw(self, screen, pix):
+    def draw(self, screen: pygame.Surface, pix):
         try:
             screen.blit(self.img, pix)
         except:
@@ -40,20 +32,20 @@ class StaticItem(Item):
     face"""
     def __init__(self, name, tile_pos, size, img_name):
         super().__init__(name, tile_pos, size)
-        self.img = super().load_img(img_name)
+        self.img = load_img(self, img_name)
 
 class MovingItem(Item):
     """Class for an item that will move and can show different faces"""
-    def __init__(self, name, tile_pos, size, facing, speed, img_name, frec_movement=0):
+    def __init__(self, name, tile_pos, size, facing, speed, img_name, frec_movement: float = 0.0):
         super().__init__(name, tile_pos, size)
         self.facing = facing
         self.speed = speed
-        self.frec_movement = frec_movement
+        self.frec_movement: float = frec_movement
 
-        self.f_img = super().load_img(img_name+"_down")
-        self.b_img = super().load_img(img_name+"_up")
-        self.l_img = super().load_img(img_name+"_left")
-        self.r_img = super().load_img(img_name+"_right")
+        self.f_img = load_img(self, img_name+"_down")
+        self.b_img = load_img(self, img_name+"_up")
+        self.l_img = load_img(self, img_name+"_left")
+        self.r_img = load_img(self, img_name+"_right")
 
         self.set_facing("down")
 
@@ -76,8 +68,16 @@ class MovingItem(Item):
         """Method for updating the possition of the item"""
         self.tile_pos = tuple([(a+b) for a, b in zip(self.tile_pos, delta)])
 
-    def roam(self):
+    def roam_xy(self):
         if random.random() < self.frec_movement:
-            move_to = random.choice(list(Configuration.directions))
+            move_to = random.choice(list(StaticConfig.directions))
             self.set_facing(move_to)
-            self.move(Configuration.directions[move_to])
+            self.move(StaticConfig.directions[move_to]+tuple([0]))
+
+
+def load_img(item: Item, img_name):
+    """Loads an image and returns the Surface object sized"""
+    img_path = StaticConfig.ICONS_PATH
+    img = pygame.image.load(img_path+img_name+".png").convert_alpha()
+    img = pygame.transform.scale(img, (item.size[0]*dynamic_config.zoom, item.size[1]*dynamic_config.zoom))
+    return img
